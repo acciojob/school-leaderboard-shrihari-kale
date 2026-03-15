@@ -29,6 +29,22 @@ app.get("/", (req, res) => {
 });
 
 // your code here!
+app.get("/topRankings", async (req, res) => {
+  try {
+    // get limit and offset from query
+    let limit = parseInt(req.query.limit) || onePageArticleCount;
+    let offset = parseInt(req.query.offset) || 0;
+
+    const leaderboard = await Leaderboard.find()
+      .sort({ global_rank: 1 }) // sort by rank
+      .skip(offset) // skip records
+      .limit(limit); // return limited records
+
+    res.status(200).json(leaderboard);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // ==end==
 
